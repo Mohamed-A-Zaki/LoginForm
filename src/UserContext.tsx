@@ -4,9 +4,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-type UserContext = {
+type userContextType = {
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  HandleLogin: (e: React.FormEvent<HTMLFormElement>, user: User) => void;
+  HandleLogout: () => void;
 };
 
 type User = {
@@ -14,17 +15,28 @@ type User = {
   password: string;
 };
 
-export const userContext = createContext({} as UserContext);
+export const userContext = createContext({} as userContextType);
 
 const UserContextProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null>(null);
+
+  function HandleLogin(e: React.FormEvent<HTMLFormElement>, user: User) {
+    e.preventDefault();
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+  }
+
+  function HandleLogout() {
+    setUser(null);
+    localStorage.clear();
+  }
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("user") as string));
   }, []);
 
   return (
-    <userContext.Provider value={{ user, setUser }}>
+    <userContext.Provider value={{ user, HandleLogin, HandleLogout }}>
       {children}
     </userContext.Provider>
   );
