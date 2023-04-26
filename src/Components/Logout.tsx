@@ -2,7 +2,13 @@ import { useContext } from "react";
 import { userContext } from "../UserContext";
 
 const Logout = () => {
-  const { user, HandleLogout } = useContext(userContext);
+  const { user, dispatch } = useContext(userContext);
+
+  function HandleLogout() {
+    dispatch({ type: "LOGOUT" });
+    localStorage.clear();
+  }
+
   return (
     <div>
       <span>{user?.email}</span>

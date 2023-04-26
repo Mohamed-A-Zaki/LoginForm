@@ -4,13 +4,17 @@ import { userContext } from "../UserContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { HandleLogin } = useContext(userContext);
+  const { dispatch } = useContext(userContext);
+
+  function HandleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const user = { email, password };
+    dispatch({ type: "LOGIN", payload: user });
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 
   return (
-    <form
-      className="container mt-3"
-      onSubmit={(e) => HandleLogin(e, { email, password })}
-    >
+    <form className="container mt-3" onSubmit={HandleLogin}>
       <h3>Login</h3>
       <input
         className="form-control my-2 shadow-none"
